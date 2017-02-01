@@ -14,34 +14,77 @@ pub use field::*;
 pub use cell::*;
 
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum GameState {
+    GameOn,
+    GameOver,
+}
+
 pub struct Game {
     field: Field,
     tail: Point<isize>,
     head: Point<isize>,
     score: u32,
+    state: GameState,
 }
 
 impl Game {
     pub fn new() -> Self {
         let (width, height) = (20, 10);
-        let middle = (width / 2, height / 2);
-
-        let mut f = Field::with_size(20, 10);
-        let head = Point { x: middle.0 + 2, y: middle.1 };
-        let mut p = head.clone();
-        for _ in 0..4 {
-            f[p.clone()] = Snake(Right);
-            p.x -= 1;
-        }
-        let tail = Point { x: p.x + 1, ..p };
-
+        let mut f = Field::with_size(width, height);
+        let (head, tail) = f.init_snake::<isize>(5);
         Game {
             field: f,
             tail: tail,
             head: head,
             score: 0,
+            state: GameState::GameOn,
         }
     }
+
+    pub fn step(&mut self) -> GameState {
+        if self.state == GameState::GameOver { return self.state }
+
+        let next_point = self.field[&self.head]
+            .clone()
+            .snake_direction()
+            .unwrap()
+            .advance(self.head.clone())
+            .wrap(&self.field.size());
+        let next_cell = self.field[&next_point].clone();
+
+        match next_cell {
+            Empty => {
+                self.move_tail();
+                self.move_head()
+            },
+            Snake(_) if next_point == self.tail => {
+                self.move_tail();
+                self.move_head()
+            },
+            Snake(_) => {
+                self.state = GameState::GameOver
+            },
+            Food => self.move_head(),
+        }
+        self.state
+    }
+
+    fn move_head(&mut self) {
+        let head: Cell = self.field[&self.head].clone();
+        let direction = head.snake_direction().unwrap();
+        let head_next = direction.advance(self.head.clone()).wrap(&self.field.size());
+        self.field[&head_next] = Cell::Snake(direction);
+        self.head = head_next
+    }
+
+    fn move_tail(&mut self) {
+        let tail = self.field[&self.tail].clone();
+        self.field[&self.tail] = Cell::Empty;
+        self.tail = tail.snake_direction().unwrap().advance(self.tail.clone()).wrap(&self.field.size())
+    }
+
+    pub fn state(&self) -> GameState { self.state }
 }
 
 impl fmt::Display for Game {

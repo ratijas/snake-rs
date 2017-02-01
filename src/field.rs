@@ -1,7 +1,8 @@
 use std::fmt;
+use std::iter;
 use std::ops::{Index, IndexMut};
 
-use num::cast::NumCast;
+use num::NumCast;
 
 use point::*;
 use cell::*;
@@ -19,11 +20,30 @@ impl Field {
         for _ in 0..height {
             rows.push({
                 let mut row = Vec::with_capacity(width);
-                row.resize(width, Cell::None);
+                row.resize(width, Cell::Empty);
                 row
             });
         }
         Field { inner: rows }
+    }
+
+    /// put a snake on the game field.
+    /// returns its head and tail positions.
+    pub fn init_snake<T>(&mut self, len: usize) -> (Point<T>, Point<T>)
+    where T: NumCast + Clone {
+        assert!(len <= self.width());
+
+        let head = Point::<T> {
+            x: NumCast::from((self.width() + len) / 2).unwrap(),
+            y: NumCast::from(self.height() / 2).unwrap(),
+        };
+        let mut tail = head.clone();
+        for _ in 0..len {
+            self[tail.clone()] = Snake(Right);
+            tail.x = NumCast::from(tail.x.to_isize().unwrap() - 1).unwrap();
+        }
+        tail.x = NumCast::from(tail.x.to_isize().unwrap() + 1).unwrap();
+        (head, tail)
     }
 
     /// size is tuple `(width, height)`.
@@ -34,16 +54,25 @@ impl Field {
 
 impl fmt::Display for Field {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(fmt, "{}", self.inner
-            .iter()
-            .map(|row| {
-                row.iter()
-                    .map(|cell| format!("{}", cell))
-                    .collect::<Vec<_>>()
-                    .join("")
-            })
-            .collect::<Vec<_>>()
-            .join("\n")
+        let h_border = format!("+{}+",
+                               iter::repeat("-")
+                                   .take(self.width())
+                                   .collect::<String>());
+        writeln!(
+            fmt, "{}\n{}\n{}",
+            h_border,
+            self.inner
+                .iter()
+                .map(|row| {
+                    format!("|{}|",
+                            row.iter()
+                                .map(|cell| format!("{}", cell))
+                                .collect::<Vec<_>>()
+                                .join(""))
+                })
+                .collect::<Vec<_>>()
+                .join("\n"),
+            h_border
         )
     }
 }
@@ -81,6 +110,20 @@ impl<T: NumCast> Index<Point<T>> for Field {
 
 impl<T: NumCast> IndexMut<Point<T>> for Field {
     fn index_mut(&mut self, index: Point<T>) -> &mut Self::Output {
+        &mut self.inner[index.y.to_usize().unwrap()][index.x.to_usize().unwrap()]
+    }
+}
+
+impl<'a, T: NumCast> Index<&'a Point<T>> for Field {
+    type Output = Cell;
+
+    fn index(&self, index: &'a Point<T>) -> &Self::Output {
+        &self.inner[index.y.to_usize().unwrap()][index.x.to_usize().unwrap()]
+    }
+}
+
+impl<'a, T: NumCast> IndexMut<&'a Point<T>> for Field {
+    fn index_mut(&mut self, index: &Point<T>) -> &mut Self::Output {
         &mut self.inner[index.y.to_usize().unwrap()][index.x.to_usize().unwrap()]
     }
 }

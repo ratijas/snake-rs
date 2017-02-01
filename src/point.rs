@@ -29,12 +29,11 @@ impl<T> Size2D<T> for (T, T) where T: Clone {
     fn width(&self) -> T { self.0.clone() }
     fn height(&self) -> T { self.1.clone() }
 }
-
-impl<T: NumCast + Clone + Rem<usize, Output = U>, U: NumCast> Point<T> {
-    pub fn wrap(&self, around: &Size2D<usize>) -> Point<U> {
-        Point::<U> {
-            x: self.x.clone() % around.width(),
-            y: self.y.clone() % around.height(),
+impl<T: NumCast> Point<T> {
+    pub fn wrap(&self, around: &Size2D<usize>) -> Self {
+        Point {
+            x: NumCast::from(self.x.to_isize().unwrap() % (around.width() as isize)).unwrap(),
+            y: NumCast::from(self.y.to_isize().unwrap() % (around.height() as isize)).unwrap(),
         }
     }
 }
@@ -47,6 +46,6 @@ mod test {
         let p = Point { x: 4, y: 6 };
         let rect = (2usize, 4usize);
         assert_eq!(p.wrap(&rect), Point { x: 0, y: 2 });
-        assert_eq!(Direction::Right.advance(p).wrap(&rect), Point { x: 1, y: 2 });
+        assert_eq!(Direction::Right.advance(p.clone()).wrap(&rect), Point { x: 1, y: 2 });
     }
 }

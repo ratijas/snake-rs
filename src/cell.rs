@@ -10,20 +10,29 @@ pub use Cell::*;
 pub enum Cell {
     Snake(Direction),
     Food,
-    None
+    Empty
+}
+
+impl Cell {
+    pub fn snake_direction(&self) -> Option<Direction> {
+        match *self {
+            Snake(ref dir) => Some(dir.clone()),
+            _ => Option::None
+        }
+    }
 }
 
 impl fmt::Display for Cell {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        if let Snake(ref dir) = *self {
-            dir.fmt(fmt)
-        } else {
-            write!(fmt, "{}", match *self {
-                Food => "*",
-                None => " ",
-                _ => unreachable!(),
-            })
-        }
+        self.snake_direction()
+            .and_then(|dir| Some(dir.fmt(fmt)))
+            .or_else(|| {
+                Some(write!(fmt, "{}", match *self {
+                    Food => "*",
+                    Empty => " ",
+                    _ => unreachable!(),
+                }))
+            }).unwrap()
     }
 }
 
