@@ -59,10 +59,10 @@ impl Direction {
 impl fmt::Display for Direction {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         write!(fmt, "{}", match *self {
-            Up => "^",
-            Down => "v",
-            Left => "<",
-            Right => ">",
+            Up => "▲",
+            Down => "▼",
+            Left => "◀",
+            Right => "▶",
         })
     }
 }
