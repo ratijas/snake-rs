@@ -50,6 +50,8 @@ impl Field {
     pub fn size(&self) -> (usize, usize) {
         (self.width(), self.height())
     }
+
+    pub fn rows(&self) -> &Vec<Vec<Cell>> { &self.inner }
 }
 
 impl fmt::Display for Field {

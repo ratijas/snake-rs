@@ -37,7 +37,7 @@ impl fmt::Display for Cell {
 }
 
 
-#[derive(Clone)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Direction {
     Up,
     Down,
@@ -52,6 +52,15 @@ impl Direction {
             Down => Point { y: NumCast::from(point.y.to_isize().unwrap() + 1).unwrap(), ..point },
             Left => Point { x: NumCast::from(point.x.to_isize().unwrap() - 1).unwrap(), ..point },
             Right => Point { x: NumCast::from(point.x.to_isize().unwrap() + 1).unwrap(), ..point },
+        }
+    }
+
+    pub fn opposite(&self) -> Direction {
+        match *self {
+            Up => Down,
+            Down => Up,
+            Left => Right,
+            Right => Left,
         }
     }
 }
