@@ -5,3 +5,4 @@ authors = ["ivan tkachenko <ratijas@users.noreply.github.com>"]
 
 [dependencies]
 num = "0.1.36"
+pancurses = "0.7"

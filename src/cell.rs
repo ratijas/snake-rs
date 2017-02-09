@@ -1,6 +1,8 @@
 use std::fmt;
 
 use num::NumCast;
+#[cfg(feature = "pancurses")]
+use pancurses::Input;
 
 use point::*;
 pub use Direction::*;
@@ -46,6 +48,17 @@ pub enum Direction {
 }
 
 impl Direction {
+    #[cfg(feature = "pancurses")]
+    pub fn from_input(key: Input) -> Option<Self> {
+        Some(match key {
+            Input::Character('s') | Input::KeyDown =>  Down,
+            Input::Character('w') | Input::KeyUp => Up,
+            Input::Character('a') | Input::KeyLeft => Left,
+            Input::Character('d') | Input::KeyRight => Right,
+            _ => return None,
+        })
+    }
+
     pub fn advance<T: NumCast>(&self, point: Point<T>) -> Point<T> {
         match *self {
             Up => Point { y: NumCast::from(point.y.to_isize().unwrap() - 1).unwrap(), ..point },

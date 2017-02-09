@@ -2,6 +2,7 @@
 #![allow(unused_imports)]
 
 extern crate num;
+extern crate pancurses;
 
 mod field;
 mod point;
