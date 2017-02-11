@@ -1,6 +1,6 @@
 use std::fmt;
 
-use num::NumCast;
+use num::{cast, NumCast};
 #[cfg(feature = "pancurses")]
 use pancurses::Input;
 
@@ -8,7 +8,7 @@ use point::*;
 pub use Direction::*;
 pub use Cell::*;
 
-#[derive(Clone)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Cell {
     Snake(Direction),
     Food,
@@ -61,10 +61,10 @@ impl Direction {
 
     pub fn advance<T: NumCast>(&self, point: Point<T>) -> Point<T> {
         match *self {
-            Up => Point { y: NumCast::from(point.y.to_isize().unwrap() - 1).unwrap(), ..point },
-            Down => Point { y: NumCast::from(point.y.to_isize().unwrap() + 1).unwrap(), ..point },
-            Left => Point { x: NumCast::from(point.x.to_isize().unwrap() - 1).unwrap(), ..point },
-            Right => Point { x: NumCast::from(point.x.to_isize().unwrap() + 1).unwrap(), ..point },
+            Up => Point { y: cast(point.y.to_isize().unwrap() - 1).unwrap(), ..point },
+            Down => Point { y: cast(point.y.to_isize().unwrap() + 1).unwrap(), ..point },
+            Left => Point { x: cast(point.x.to_isize().unwrap() - 1).unwrap(), ..point },
+            Right => Point { x: cast(point.x.to_isize().unwrap() + 1).unwrap(), ..point },
         }
     }
 

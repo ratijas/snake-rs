@@ -2,8 +2,8 @@ use std::fmt;
 use std::iter;
 use std::ops::{Index, IndexMut};
 
-use num::NumCast;
 
+use num::{cast, NumCast};
 use point::*;
 use cell::*;
 
@@ -34,15 +34,15 @@ impl Field {
         assert!(len <= self.width());
 
         let head = Point::<T> {
-            x: NumCast::from((self.width() + len) / 2).unwrap(),
-            y: NumCast::from(self.height() / 2).unwrap(),
+            x: cast((self.width() + len) / 2).unwrap(),
+            y: cast(self.height() / 2).unwrap(),
         };
         let mut tail = head.clone();
         for _ in 0..len {
             self[tail.clone()] = Snake(Right);
-            tail.x = NumCast::from(tail.x.to_isize().unwrap() - 1).unwrap();
+            tail.x = cast(tail.x.to_isize().unwrap() - 1).unwrap();
         }
-        tail.x = NumCast::from(tail.x.to_isize().unwrap() + 1).unwrap();
+        tail.x = cast(tail.x.to_isize().unwrap() + 1).unwrap();
         (head, tail)
     }
 

@@ -9,6 +9,8 @@ pub struct Point<T> where T: NumCast {
     pub y: T,
 }
 
+impl<T> Copy for Point<T> where T: NumCast + Copy {}
+
 impl<T> PartialEq for Point<T> where T: NumCast + PartialEq {
     fn eq(&self, other: &Self) -> bool {
         self.x == other.x && self.y == other.y
