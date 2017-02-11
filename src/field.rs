@@ -2,6 +2,8 @@ use std::fmt;
 use std::iter;
 use std::ops::{Index, IndexMut};
 
+use rand;
+use rand::distributions::{IndependentSample, Range};
 
 use num::{cast, NumCast};
 use point::*;
@@ -52,6 +54,21 @@ impl Field {
     }
 
     pub fn rows(&self) -> &Vec<Vec<Cell>> { &self.inner }
+
+    pub fn drop_food(&mut self, snake_len: usize) -> Result<(), ()> {
+        let n_free = self.width() * self.height() - snake_len as usize;
+        let between = Range::new(0, n_free);
+        let mut rng = rand::thread_rng();
+        let place = between.ind_sample(&mut rng) as usize;
+
+        self.inner
+            .iter_mut()
+            .flat_map(|row| row.iter_mut())
+            .filter(|cell| cell == &&mut Cell::Empty)
+            .nth(place)
+            .map(|cell: &mut Cell| *cell = Cell::Food)
+            .ok_or(())
+    }
 }
 
 impl fmt::Display for Field {

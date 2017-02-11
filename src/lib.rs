@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
+extern crate rand;
 extern crate num;
 extern crate pancurses;
 
@@ -25,8 +26,8 @@ pub struct Game {
     field: Field,
     tail: Point<isize>,
     head: Point<isize>,
-    score: u32,
-    snake_len: u32,
+    score: usize,
+    snake_len: usize,
     state: GameState,
     no_turn_back: Direction,
 }
@@ -35,13 +36,15 @@ impl Game {
     pub fn new() -> Self {
         let (width, height) = (20, 10);
         let mut f = Field::with_size(width, height);
-        let (head, tail) = f.init_snake::<isize>(5);
+        let snake_len = 5;
+        let (head, tail) = f.init_snake::<isize>(snake_len);
+        f.drop_food(snake_len).unwrap();
         Game {
             field: f,
             tail: tail,
             head: head,
             score: 0,
-            snake_len: 5,
+            snake_len: snake_len,
             state: GameState::GameOn,
             no_turn_back: Direction::Left,
         }
@@ -70,7 +73,12 @@ impl Game {
             Snake(_) => {
                 self.state = GameState::GameOver
             },
-            Food => self.move_head(),
+            Food => {
+                self.move_head();
+                self.snake_len += 1;
+                self.score += 1;
+                let _ = self.drop_food();
+            },
         }
         self.state
     }
@@ -90,13 +98,9 @@ impl Game {
         self.tail = tail.snake_direction().unwrap().advance(self.tail.clone()).wrap(&self.field.size());
     }
 
-    pub fn state(&self) -> GameState { self.state }
-
-    pub fn quit(&mut self) { self.state = GameState::GameOver; }
-
-    pub fn field(&self) -> &Field { &self.field }
-
-    pub fn score(&self) -> u32 { self.score }
+    fn drop_food(&mut self) -> Result<(), ()> {
+        self.field.drop_food(self.snake_len)
+    }
 
     pub fn turn(&mut self, dir: Direction) -> Result<(), ()> {
         if self.state == GameState::GameOver { return Err(()) }
@@ -107,6 +111,20 @@ impl Game {
         }
         Ok(())
     }
+
+    pub fn quit(&mut self) { self.state = GameState::GameOver; }
+
+    pub fn state(&self) -> GameState { self.state }
+
+    pub fn field(&self) -> &Field { &self.field }
+
+    pub fn score(&self) -> usize { self.score }
+
+    pub fn head(&self) -> Point<isize> { self.head }
+
+    pub fn tail(&self) -> Point<isize> { self.tail }
+
+    pub fn snake_len(&self) -> usize { self.snake_len }
 }
 
 impl fmt::Display for Game {
@@ -138,5 +156,11 @@ mod tests {
         assert_eq!(game.field[&game.head].snake_direction().unwrap(), Direction::Down);
         assert_eq!(game.no_turn_back, Direction::Up);
         assert_eq!(game.turn(Direction::Up), Err(()));
+    }
+
+    #[test]
+    fn drop_food_test() {
+        let mut game = Game::new();
+        game.field.drop_food(game.snake_len).unwrap();
     }
 }
