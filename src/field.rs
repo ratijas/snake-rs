@@ -55,6 +55,14 @@ impl Field {
 
     pub fn rows(&self) -> &Vec<Vec<Cell>> { &self.inner }
 
+    pub fn next_point<T>(&self, p: Point<T>) -> Option<Point<T>>
+        where T: NumCast {
+        self[&p]
+            .snake_direction()
+            .map(|d| d.advance(p))
+            .map(|p| p.wrap(&self.size()))
+    }
+
     pub fn drop_food(&mut self, snake_len: usize) -> Result<(), ()> {
         let n_free = self.width() * self.height() - snake_len as usize;
         let between = Range::new(0, n_free);
