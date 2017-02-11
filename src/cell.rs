@@ -25,11 +25,11 @@ impl Cell {
 }
 
 impl fmt::Display for Cell {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.snake_direction()
-            .and_then(|dir| Some(dir.fmt(fmt)))
+            .and_then(|dir| Some(dir.fmt(f)))
             .or_else(|| {
-                Some(write!(fmt, "{}", match *self {
+                Some(write!(f, "{}", match *self {
                     Food => "*",
                     Empty => " ",
                     _ => unreachable!(),
@@ -79,8 +79,8 @@ impl Direction {
 }
 
 impl fmt::Display for Direction {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        write!(fmt, "{}", match *self {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", match *self {
             Up => "▲",
             Down => "▼",
             Left => "◀",

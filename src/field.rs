@@ -55,13 +55,13 @@ impl Field {
 }
 
 impl fmt::Display for Field {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let h_border = format!("+{}+",
                                iter::repeat("-")
                                    .take(self.width())
                                    .collect::<String>());
         writeln!(
-            fmt, "{}\n{}\n{}",
+            f, "{}\n{}\n{}",
             h_border,
             self.inner
                 .iter()
