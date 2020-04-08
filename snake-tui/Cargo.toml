@@ -1,0 +1,9 @@
+[package]
+name = "snake-frontend"
+version = "0.1.0"
+authors = ["ivan tkachenko <ratijas@users.noreply.github.com>"]
+
+[dependencies]
+
+snake = { path = "../snake", features = ["pancurses"] }
+pancurses = "0.7"
