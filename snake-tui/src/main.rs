@@ -93,6 +93,9 @@ impl Application {
             window.refresh();
             thread::sleep(time::Duration::from_millis(500));
         }
+        // final draw call
+        game.lock().unwrap().draw(&window);
+        window.refresh();
     }
 
     fn interaction_loop(game: Arc<Mutex<Game>>, window: MyWin) {
@@ -115,6 +118,9 @@ impl Application {
                 _ => (),
             }
         }
+        // reset timeout and wait for any key.
+        window.timeout(-1);
+        let _ = window.getch();
     }
 
     fn skip_buffered_input(&self) {
@@ -127,6 +133,7 @@ impl Application {
         window.nodelay(true);
         self.skip_buffered_input();
         pancurses::noecho();
+        pancurses::curs_set(0);
         { // colors
             use pancurses::*;
 

@@ -14,7 +14,10 @@ impl CursesWindow for Game {
     fn draw(&self, window: &Window) {
         window.clear();
         window.draw_box(0, 0);
-        window.mvprintw(1, 2, &format!("Score: {}", self.score()));
+        if matches!(self.state(), GameState::GameOver) {
+            window.mvprintw(0, 7, "Game over!");
+        }
+        window.mvprintw(1, 8, &format!("Score: {}", self.score()));
         // field's sub-window
         {
             let view: FieldView = self.into();
