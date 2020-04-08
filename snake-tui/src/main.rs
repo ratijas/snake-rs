@@ -85,13 +85,15 @@ impl Application {
         while game.lock().unwrap().state() != GameState::GameOver {
             window.clear();
 
-            if let Ok(mut game_guard) = game.try_lock() {
-                game_guard.step();
-                game_guard.draw(&window);
+            if let Ok(mut game_lock) = game.try_lock() {
+                if !game_lock.is_paused() {
+                    game_lock.step();
+                }
+                game_lock.draw(&window);
             }
 
             window.refresh();
-            thread::sleep(time::Duration::from_millis(500));
+            thread::sleep(time::Duration::from_millis(1000));
         }
         // final draw call
         game.lock().unwrap().draw(&window);
@@ -100,7 +102,7 @@ impl Application {
 
     fn interaction_loop(game: Arc<Mutex<Game>>, window: MyWin) {
         window.nodelay(false);
-        window.timeout(500);
+        window.timeout(100);
         window.keypad(true);
 
         while game.lock().unwrap().state() != GameState::GameOver {
@@ -108,10 +110,14 @@ impl Application {
                 Some(input) => match input {
                     Character('q') => {
                         game.lock().unwrap().quit();
-                    },
+                    }
+                    Character(' ') => {
+                        game.lock().unwrap().pause();
+                    }
                     key => {
                         if let Some(dir) = Direction::from_input(key) {
                             game.lock().unwrap().turn(dir).ok();
+                            game.lock().unwrap().unpause();
                         }
                     },
                 },

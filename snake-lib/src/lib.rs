@@ -12,6 +12,7 @@ pub use crate::cell::*;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum GameState {
     GameOn,
+    GamePaused,
     GameOver,
 }
 
@@ -44,7 +45,7 @@ impl Game {
     }
 
     pub fn step(&mut self) -> GameState {
-        if matches!(self.state, GameState::GameOver) { return self.state }
+        if !matches!(self.state, GameState::GameOn) { return self.state }
 
         let next_point = self.field[&self.head]
             .clone()
@@ -64,7 +65,7 @@ impl Game {
                 self.move_head()
             },
             Snake(_) => {
-                self.state = GameState::GameOver
+                self.state = GameState::GameOver;
             },
             Food => {
                 self.move_head();
@@ -108,6 +109,22 @@ impl Game {
     pub fn quit(&mut self) { self.state = GameState::GameOver; }
 
     pub fn state(&self) -> GameState { self.state }
+
+    pub fn pause(&mut self) {
+        if matches!(self.state, GameState::GameOn) {
+            self.state = GameState::GamePaused;
+        }
+    }
+
+    pub fn unpause(&mut self) {
+        if matches!(self.state, GameState::GamePaused) {
+            self.state = GameState::GameOn;
+        }
+    }
+
+    pub fn is_paused(&self) -> bool {
+        matches!(self.state, GameState::GamePaused)
+    }
 
     pub fn field(&self) -> &Field { &self.field }
 

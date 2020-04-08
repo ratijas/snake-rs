@@ -10,4 +10,4 @@ Project workspace is split in two packages: core functionality as a library, and
 
 `$ cargo run`
 
-Use keyboard arrows to control the snake, Q to quit.
+Use keyboard arrows to control the snake, Space bar to pause, Q to quit.
