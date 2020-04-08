@@ -30,14 +30,26 @@ impl Game {
     pub fn new() -> Self {
         let (width, height) = (20, 10);
         let mut f = Field::with_size(width, height);
-        let snake_len = 5;
-        let (head, tail) = f.init_snake::<isize>(snake_len);
-        f.drop_food(snake_len).unwrap();
+        let snake_len = 45;
+        //
+        let (head, tail) = f.init_snake::<isize>(15, 7);
+        let (head2, tail2) = f.init_snake::<isize>(15, 8);
+        for x in tail2.x..=head2.x {
+            let y = 8;
+            let index = Point{ x, y };
+            let d = f[index].snake_direction().unwrap().opposite();
+            f[index] = Snake(d);
+        }
+        f[tail2] = Snake(Direction::Up);
+        let (head3, tail3) = f.init_snake::<isize>(15, 9);
+        f[head3] = Snake(Direction::Up);
+        // f.drop_food(snake_len).unwrap();
+        f[Point { x: 11, y: 3 }] = Cell::Food;
         Game {
             field: f,
-            tail: tail,
+            tail: tail3,
             head: head,
-            score: 0,
+            score: 45,
             snake_len: snake_len,
             state: GameState::GameOn,
             no_turn_back: Direction::Left,

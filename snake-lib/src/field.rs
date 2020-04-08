@@ -30,13 +30,13 @@ impl Field {
 
     /// put a snake on the game field.
     /// returns its head and tail positions.
-    pub fn init_snake<T>(&mut self, len: usize) -> (Point<T>, Point<T>)
+    pub fn init_snake<T>(&mut self, len: usize, y: usize) -> (Point<T>, Point<T>)
     where T: NumCast + Clone {
         assert!(len <= self.width());
 
         let head = Point::<T> {
             x: cast((self.width() + len) / 2).unwrap(),
-            y: cast(self.height() / 2).unwrap(),
+            y: cast(y).unwrap(),
         };
         let mut tail = head.clone();
         for _ in 0..len {
