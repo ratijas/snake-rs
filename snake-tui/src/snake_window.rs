@@ -38,7 +38,7 @@ impl CursesWindow for Game {
                 .fold((), |_, (y, row)| {
                     row.iter()
                         .enumerate()
-                        .filter(|&(_, cell)| match *cell { Cell::Snake(_) => false, _ => true})
+                        .filter(|&(_, cell)| !matches!(*cell, Cell::Snake(_)))
                         .fold((), |_, (x, cell)| {
                             window.mvprintw(1+y as i32, 1+x as i32, &format!("{}", cell));
                         });

@@ -49,7 +49,7 @@ impl Game {
     }
 
     pub fn step(&mut self) -> GameState {
-        if self.state == GameState::GameOver { return self.state }
+        if matches!(self.state, GameState::GameOver) { return self.state }
 
         let next_point = self.field[&self.head]
             .clone()
