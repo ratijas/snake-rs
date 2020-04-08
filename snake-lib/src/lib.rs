@@ -1,8 +1,3 @@
-extern crate rand;
-extern crate num;
-#[cfg(feature = "pancurses")]
-extern crate pancurses;
-
 mod field;
 mod point;
 mod cell;

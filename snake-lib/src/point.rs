@@ -1,4 +1,4 @@
-use num::{cast, NumCast};
+use num_traits::{cast, NumCast};
 
 #[derive(Clone, Debug)]
 pub struct Point<T> where T: NumCast {

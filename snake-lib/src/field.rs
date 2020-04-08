@@ -2,9 +2,8 @@ use std::fmt;
 use std::iter;
 use std::ops::{Index, IndexMut};
 
-use rand;
-use rand::distributions::{IndependentSample, Range};
-use num::{cast, NumCast};
+use rand::Rng;
+use num_traits::{cast, NumCast};
 
 use crate::point::*;
 use crate::cell::*;
@@ -65,14 +64,11 @@ impl Field {
 
     pub fn drop_food(&mut self, snake_len: usize) -> Result<(), ()> {
         let n_free = self.width() * self.height() - snake_len as usize;
-        let between = Range::new(0, n_free);
-        let mut rng = rand::thread_rng();
-        let place = between.ind_sample(&mut rng) as usize;
-
+        let place = rand::thread_rng().gen_range(0, n_free);
         self.inner
             .iter_mut()
             .flat_map(|row| row.iter_mut())
-            .filter(|cell| cell == &&mut Cell::Empty)
+            .filter(|cell| matches!(*cell, Cell::Empty))
             .nth(place)
             .map(|cell: &mut Cell| *cell = Cell::Food)
             .ok_or(())

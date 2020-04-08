@@ -1,6 +1,6 @@
 use std::fmt;
 
-use num::{cast, NumCast};
+use num_traits::{cast, NumCast};
 #[cfg(feature = "pancurses")]
 use pancurses::Input;
 
