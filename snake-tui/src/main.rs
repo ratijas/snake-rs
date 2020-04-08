@@ -16,6 +16,7 @@ use crate::curses_window::*;
 mod curses_window;
 mod snake_window;
 
+/// Required wrapper for using `pancurses::Window` in multithreaded environment.
 struct MyWin(Window);
 
 unsafe impl std::marker::Send for MyWin {}
@@ -52,8 +53,8 @@ impl Application {
 
         let (tx, rx) = channel();
         {
-            let window_guard: Arc<Mutex<MyWin>> = self.window.as_ref().unwrap().clone();
-            let window: &Window = &**window_guard.lock().unwrap();
+            let window_arc: Arc<Mutex<MyWin>> = self.window.as_ref().unwrap().clone();
+            let window: &Window = &**window_arc.lock().unwrap();
             let game: Arc<Mutex<Game>> = self.game.as_ref().unwrap().clone();
 
             {
