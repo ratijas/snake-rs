@@ -78,17 +78,5 @@ impl CursesWindow for Field {
     fn draw(&self, window: &Window) {
         window.clear();
         window.draw_box(0, 0);
-/*
-        self.rows()
-            .iter()
-            .enumerate()
-            .fold((), |_, (y, row)| {
-                row.iter()
-                    .enumerate()
-                    .fold((), |_, (x, cell)| {
-                        window.mvprintw(1+y as i32, 1+x as i32, &format!("{}", cell));
-                    });
-            });
-*/
     }
 }

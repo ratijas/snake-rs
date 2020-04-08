@@ -56,7 +56,6 @@ impl Application {
             let window: &Window = &**window_guard.lock().unwrap();
             let game: Arc<Mutex<Game>> = self.game.as_ref().unwrap().clone();
 
-
             {
                 let (game, tx) = (game.clone(), tx.clone());
                 let g_size = game.lock().unwrap().win_size();
@@ -67,7 +66,6 @@ impl Application {
                     tx.send(()).unwrap();
                 });
             }
-
             {
                 let (game, tx) = (game.clone(), tx.clone());
                 let window = MyWin(window.derwin(1, 1, 0, 0).unwrap());

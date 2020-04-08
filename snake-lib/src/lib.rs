@@ -128,7 +128,8 @@ impl Game {
 impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, " score: {}", self.score)?;
-        writeln!(f, "{}", self.field)
+        writeln!(f, "{}", self.field)?;
+        Ok(())
     }
 }
 
