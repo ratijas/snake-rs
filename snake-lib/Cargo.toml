@@ -13,5 +13,5 @@ default = ["pancurses"]
 
 [dependencies]
 num-traits = "0.2"
-pancurses = { version = "0.7", optional = true }
+pancurses = { version = "0.16", features = [], optional = true }
 rand = "0.7"

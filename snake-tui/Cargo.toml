@@ -8,4 +8,4 @@ edition = "2018"
 [dependencies]
 
 snake-lib = { path = "../snake-lib", features = ["pancurses"] }
-pancurses = "0.7"
+pancurses = { version = "0.16", features = [] }
