@@ -1,9 +1,10 @@
 [package]
-name = "snake-frontend"
+name = "snake-tui"
 version = "0.1.0"
-authors = ["ivan tkachenko <ratijas@users.noreply.github.com>"]
+authors = ["ivan tkachenko <me@ratijas.tk>"]
+description = "Snake game in a terminal"
 
 [dependencies]
 
-snake = { path = "../snake", features = ["pancurses"] }
+snake-lib = { path = "../snake-lib", features = ["pancurses"] }
 pancurses = "0.7"

@@ -1,7 +1,11 @@
 [package]
-name = "snake"
+name = "snake-lib"
 version = "0.1.0"
-authors = ["ivan tkachenko <ratijas@users.noreply.github.com>"]
+authors = ["ivan tkachenko <me@ratijas.tk>"]
+description = "Core library for a classic snake game"
+
+[lib]
+name = "snake"
 
 [features]
 default = ["pancurses"]

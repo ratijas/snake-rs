@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "snake-lib",
+    "snake-tui",
+]
