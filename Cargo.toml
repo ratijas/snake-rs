@@ -1,0 +1,12 @@
+[package]
+name = "snake"
+version = "0.1.0"
+authors = ["ivan tkachenko <ratijas@users.noreply.github.com>"]
+
+[features]
+default = ["pancurses"]
+
+[dependencies]
+num = "0.1.36"
+pancurses = { version = "0.7", optional = true }
+rand = "0.3"
