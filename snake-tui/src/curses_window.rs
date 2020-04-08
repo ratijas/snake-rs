@@ -1,5 +1,3 @@
-extern crate pancurses;
-
 use pancurses::Window;
 
 /// A trait for objects that can render themselves on an ncurses `Window`.

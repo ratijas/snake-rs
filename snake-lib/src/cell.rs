@@ -4,8 +4,8 @@ use num::{cast, NumCast};
 #[cfg(feature = "pancurses")]
 use pancurses::Input;
 
-use point::*;
-pub use Direction::*;
+use crate::point::*;
+pub use self::Direction::*;
 pub use Cell::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]

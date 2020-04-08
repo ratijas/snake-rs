@@ -3,6 +3,7 @@ name = "snake-tui"
 version = "0.1.0"
 authors = ["ivan tkachenko <me@ratijas.tk>"]
 description = "Snake game in a terminal"
+edition = "2018"
 
 [dependencies]
 

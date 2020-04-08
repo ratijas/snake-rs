@@ -1,7 +1,4 @@
-use num;
-use num::cast::NumCast;
-use field::*;
-use std::ops::Rem;
+use num::{cast, NumCast};
 
 #[derive(Clone, Debug)]
 pub struct Point<T> where T: NumCast {
@@ -42,10 +39,10 @@ macro_rules! modulus (
 );
 
 impl<T: NumCast> Point<T> {
-    pub fn wrap(&self, around: &Size2D<usize>) -> Self {
+    pub fn wrap(&self, around: &dyn Size2D<usize>) -> Self {
         Point {
-            x: num::cast(modulus!(self.x.to_isize().unwrap(), around.width())).unwrap(),
-            y: num::cast(modulus!(self.y.to_isize().unwrap(), around.height())).unwrap(),
+            x: cast(modulus!(self.x.to_isize().unwrap(), around.width())).unwrap(),
+            y: cast(modulus!(self.y.to_isize().unwrap(), around.height())).unwrap(),
         }
     }
 }

@@ -1,9 +1,8 @@
-use curses_window::CursesWindow;
 use pancurses::{self, Window, COLOR_PAIR};
-use snake;
+
 use snake::*;
 
-use std::fmt;
+use crate::curses_window::CursesWindow;
 
 impl CursesWindow for Game {
     fn win_size(&self) -> (i32, i32) {

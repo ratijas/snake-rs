@@ -4,10 +4,10 @@ use std::ops::{Index, IndexMut};
 
 use rand;
 use rand::distributions::{IndependentSample, Range};
-
 use num::{cast, NumCast};
-use point::*;
-use cell::*;
+
+use crate::point::*;
+use crate::cell::*;
 
 
 pub struct Field {

@@ -1,8 +1,6 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-
 extern crate rand;
 extern crate num;
+#[cfg(feature = "pancurses")]
 extern crate pancurses;
 
 mod field;
@@ -11,9 +9,9 @@ mod cell;
 
 use std::fmt;
 
-pub use point::*;
-pub use field::*;
-pub use cell::*;
+pub use crate::point::*;
+pub use crate::field::*;
+pub use crate::cell::*;
 
 
 #[derive(Clone, Copy, PartialEq, Eq)]

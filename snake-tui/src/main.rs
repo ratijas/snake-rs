@@ -1,28 +1,20 @@
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-#![allow(dead_code)]
-
-extern crate snake;
-use snake::*;
-
-extern crate pancurses;
-
-mod snake_window;
-use snake_window::*;
-
-mod curses_window;
-use curses_window::*;
-
-use std::ops::Deref;
-use std::sync::{Arc, Mutex};
-use std::sync::mpsc::channel;
-use std::thread;
-use std::time;
+use std::{
+    ops::Deref,
+    sync::{Arc, Mutex, mpsc::channel},
+    thread,
+    time,
+};
 
 use pancurses::{initscr, endwin};
 use pancurses::Window;
 use pancurses::Input::*;
 
+use snake::*;
+
+use crate::curses_window::*;
+
+mod curses_window;
+mod snake_window;
 
 struct MyWin(Window);
 
@@ -127,7 +119,7 @@ impl Application {
     }
 
     fn skip_buffered_input(&self) {
-        while let Some(input) = self.root_window.getch() {}
+        while let Some(_input) = self.root_window.getch() {}
     }
 
     fn set_up(&mut self) {
